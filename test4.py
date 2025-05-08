@@ -3,11 +3,11 @@ import numpy as np
 import shap
 import matplotlib.pyplot as plt
 import random
-import whisper
 import tempfile
+from faster_whisper import WhisperModel
 
-# Whisper model
-asr_model = whisper.load_model("base")
+# Load Whisper model
+model = WhisperModel("base", compute_type="int8")
 
 # CRLA knowledge base
 crla_knowledge_base = {
@@ -38,8 +38,8 @@ elif st.session_state.page == 'retell':
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_file:
             tmp_file.write(retelling_audio.read())
             tmp_path = tmp_file.name
-        result = asr_model.transcribe(tmp_path)
-        st.session_state.retelling_text = result['text']
+        segments, _ = model.transcribe(tmp_path)
+        st.session_state.retelling_text = " ".join([seg.text for seg in segments])
         st.text_area("Transcribed Retelling:", value=st.session_state.retelling_text, height=100)
     if st.button("Proceed to Questions"):
         st.session_state.page = 'questions'
@@ -63,8 +63,8 @@ elif st.session_state.page == 'questions':
             with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_file:
                 tmp_file.write(audio.read())
                 tmp_path = tmp_file.name
-            result = asr_model.transcribe(tmp_path)
-            answer_text = result['text']
+            segments, _ = model.transcribe(tmp_path)
+            answer_text = " ".join([seg.text for seg in segments])
             st.text_area(f"Transcribed Answer {i+1}", value=answer_text, key=f"ans_{i}")
             correct = crla_knowledge_base[question]
             score = 1.0 if answer_text.strip().lower() in correct.lower() else 0.0
