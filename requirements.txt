@@ -1,0 +1,8 @@
+streamlit
+streamlit-webrtc
+openai-whisper
+shap
+matplotlib
+torch
+torchaudio
+ffmpeg-python
