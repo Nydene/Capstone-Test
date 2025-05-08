@@ -7,3 +7,4 @@ torch
 torchaudio
 ffmpeg-python
 streamlit_audio_recorder
+whisper
