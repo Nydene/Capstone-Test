@@ -6,4 +6,4 @@ matplotlib
 torch
 torchaudio
 ffmpeg-python
-st-mic-recorder
+streamlit_audio_recorder
