@@ -3,6 +3,7 @@ streamlit-webrtc
 openai-whisper
 shap
 matplotlib
+numpy
 torch
 torchaudio
 ffmpeg-python
